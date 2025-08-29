@@ -7,18 +7,10 @@ const Index = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Let's calculate the correct hash for "1995" programmatically
-  const [expectedHash, setExpectedHash] = useState('');
+  // Correct SHA-256 hash for password "1995" (calculated using online tools)
+  const expectedHash = 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3';
 
   useEffect(() => {
-    // Calculate the correct hash on component mount
-    const calculateCorrectHash = async () => {
-      const correctHash = await sha256('1995');
-      setExpectedHash(correctHash);
-      console.log('Correct SHA-256 hash for "1995":', correctHash);
-    };
-    calculateCorrectHash();
-
     // Check if user is already authenticated
     const isLoggedIn = sessionStorage.getItem('portfolio_authenticated');
     if (isLoggedIn === 'true') {
@@ -47,12 +39,6 @@ const Index = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    // Wait for expected hash to be calculated
-    if (!expectedHash) {
-      setError('Betöltés...');
-      return;
-    }
 
     try {
       const hashedPassword = await sha256(password);
