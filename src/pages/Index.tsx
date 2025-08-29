@@ -7,10 +7,18 @@ const Index = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Expected SHA-256 hash for password "1995"
-  const expectedHash = '3a7bd3e2360a3d80d1cf0ae474ac3f3ec6f538566f912c7463e3a22fb6c1e09d';
+  // Let's calculate the correct hash for "1995" programmatically
+  const [expectedHash, setExpectedHash] = useState('');
 
   useEffect(() => {
+    // Calculate the correct hash on component mount
+    const calculateCorrectHash = async () => {
+      const correctHash = await sha256('1995');
+      setExpectedHash(correctHash);
+      console.log('Correct SHA-256 hash for "1995":', correctHash);
+    };
+    calculateCorrectHash();
+
     // Check if user is already authenticated
     const isLoggedIn = sessionStorage.getItem('portfolio_authenticated');
     if (isLoggedIn === 'true') {
@@ -40,8 +48,19 @@ const Index = () => {
     e.preventDefault();
     setError('');
 
+    // Wait for expected hash to be calculated
+    if (!expectedHash) {
+      setError('Betöltés...');
+      return;
+    }
+
     try {
       const hashedPassword = await sha256(password);
+      console.log('Input password:', password);
+      console.log('Generated hash:', hashedPassword);
+      console.log('Expected hash:', expectedHash);
+      console.log('Hashes match:', hashedPassword === expectedHash);
+      
       if (hashedPassword === expectedHash) {
         sessionStorage.setItem('portfolio_authenticated', 'true');
         setIsAuthenticated(true);
@@ -49,6 +68,7 @@ const Index = () => {
         setError('Hibás jelszó');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('Hiba történt');
     }
   };
