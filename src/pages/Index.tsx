@@ -6,17 +6,36 @@ const Index = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [correctHash, setCorrectHash] = useState('');
 
-  // Correct SHA-256 hash for password "1995" (calculated using online tools)
-  const expectedHash = 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3';
+  const sha256 = async (message: string) => {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  };
 
   useEffect(() => {
-    // Check if user is already authenticated
-    const isLoggedIn = sessionStorage.getItem('portfolio_authenticated');
-    if (isLoggedIn === 'true') {
-      setIsAuthenticated(true);
-    }
-    setIsLoading(false);
+    // Calculate the correct hash for "piano" on mount
+    const calculateHash = async () => {
+      try {
+        const hash = await sha256('piano');
+        setCorrectHash(hash);
+        console.log('Correct SHA-256 hash for "piano":', hash);
+        
+        // Check if user is already authenticated
+        const isLoggedIn = sessionStorage.getItem('portfolio_authenticated');
+        if (isLoggedIn === 'true') {
+          setIsAuthenticated(true);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error calculating hash:', error);
+        setIsLoading(false);
+      }
+    };
+    
+    calculateHash();
 
     // Add fade-in animations after content loads
     setTimeout(() => {
@@ -27,27 +46,25 @@ const Index = () => {
         }, index * 100);
       });
     }, 100);
-  }, [isAuthenticated]);
-
-  const sha256 = async (message: string) => {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  };
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
+    if (!correctHash) {
+      setError('Betöltés...');
+      return;
+    }
+
     try {
       const hashedPassword = await sha256(password);
       console.log('Input password:', password);
       console.log('Generated hash:', hashedPassword);
-      console.log('Expected hash:', expectedHash);
-      console.log('Hashes match:', hashedPassword === expectedHash);
+      console.log('Expected hash:', correctHash);
+      console.log('Hashes match:', hashedPassword === correctHash);
       
-      if (hashedPassword === expectedHash) {
+      if (hashedPassword === correctHash) {
         sessionStorage.setItem('portfolio_authenticated', 'true');
         setIsAuthenticated(true);
       } else {
