@@ -19,77 +19,97 @@ export default {
 		},
 		extend: {
 			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				surface: 'hsl(var(--surface))',
+				'surface-elevated': 'hsl(var(--surface-elevated))',
+				
+				// Apple-inspired grey palette
+				grey: {
+					50: 'hsl(var(--grey-50))',
+					100: 'hsl(var(--grey-100))',
+					200: 'hsl(var(--grey-200))',
+					300: 'hsl(var(--grey-300))',
+					400: 'hsl(var(--grey-400))',
+					500: 'hsl(var(--grey-500))',
+				},
+				
+				// Apple blue
+				'apple-blue': {
+					DEFAULT: 'hsl(var(--apple-blue))',
+					light: 'hsl(var(--apple-blue-light))',
+					dark: 'hsl(var(--apple-blue-dark))',
+				},
+				
+				// Apple silver
+				silver: {
+					DEFAULT: 'hsl(var(--silver))',
+					light: 'hsl(var(--silver-light))',
+					dark: 'hsl(var(--silver-dark))',
+				},
+				
+				// Semantic colors
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					light: 'hsl(var(--primary-light))',
+					dark: 'hsl(var(--primary-dark))',
 				},
-				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
-				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
-				},
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
-				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				}
+				success: 'hsl(var(--success))',
+				error: 'hsl(var(--error))',
 			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				'apple-sm': 'var(--radius-sm)',
+				'apple-md': 'var(--radius-md)',
+				'apple-lg': 'var(--radius-lg)',
+				'apple-xl': 'var(--radius-xl)',
+			},
+			boxShadow: {
+				'apple-soft': 'var(--shadow-soft)',
+				'apple-medium': 'var(--shadow-medium)',
+				'apple-large': 'var(--shadow-large)',
+			},
+			backgroundImage: {
+				'gradient-hero': 'var(--gradient-hero)',
+				'gradient-card': 'var(--gradient-card)',
+			},
+			fontFamily: {
+				'inter': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+			},
+			transitionTimingFunction: {
+				'ease-out-cubic': 'var(--ease-out-cubic)',
+				'ease-in-out-cubic': 'var(--ease-in-out-cubic)',
+			},
+			transitionDuration: {
+				'fast': 'var(--transition-fast)',
+				'normal': 'var(--transition-normal)',
+				'slow': 'var(--transition-slow)',
 			},
 			keyframes: {
-				'accordion-down': {
-					from: {
-						height: '0'
+				fadeInUp: {
+					'0%': { 
+						opacity: '0', 
+						transform: 'translateY(20px)' 
 					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					'100%': { 
+						opacity: '1', 
+						transform: 'translateY(0)' 
+					},
 				},
-				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
+				scaleIn: {
+					'0%': { 
+						opacity: '0', 
+						transform: 'scale(0.95)' 
 					},
-					to: {
-						height: '0'
-					}
-				}
+					'100%': { 
+						opacity: '1', 
+						transform: 'scale(1)' 
+					},
+				},
 			},
 			animation: {
-				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.33, 1, 0.68, 1) forwards',
+				'scale-in': 'scaleIn 0.4s cubic-bezier(0.33, 1, 0.68, 1) forwards',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
